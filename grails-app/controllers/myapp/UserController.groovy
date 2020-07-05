@@ -1,7 +1,10 @@
 package myapp
 
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.http.HttpStatus
 import grails.converters.JSON
+
+import javax.servlet.http.HttpServletRequest
 
 class UserController {
 
@@ -17,8 +20,19 @@ class UserController {
         HashMap jsonMap = new HashMap()
 
         jsonMap.results = res.collect { r ->
-            [firstName: r.firstName, lastName: r.lastName]
+            [username: r.username]
         }
+
+        render jsonMap as JSON
+    }
+
+    def post() {
+        HttpServletRequest requestBody = GrailsWebRequest.lookup().request
+        HashMap jsonMap = new HashMap()
+
+        def res = userService.post(requestBody.JSON, params)
+
+        jsonMap.results = res
 
         render jsonMap as JSON
     }

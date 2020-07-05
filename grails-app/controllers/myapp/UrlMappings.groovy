@@ -6,12 +6,12 @@ class UrlMappings {
 
         "/api/v1/users" {
             controller = 'user'
-            action = [GET: 'list']
+            action = [GET: 'list', POST: 'post']
         }
 
         "/api/v1/urls" {
             controller = 'shortenUrl'
-            action = [POST: 'post']
+            action = [POST: 'post', GET: 'list']
         }
 
         "/"(view:"/myapp")

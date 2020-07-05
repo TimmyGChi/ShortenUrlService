@@ -2,12 +2,20 @@
     <div class="app-container">
         <h1>Welcome to my Angular Application</h1>
         <form [formGroup]="formGroup">
+            <label class="label-url" for="user">User</label>
+            <input class="input-url" type="text"
+                   id="user"
+                   formControlName="user">
+            <button class="button-generate" (click)="registerUser()">Login/Register</button> <br> <br>
+
             <label class="label-url" for="url">Url</label>
             <input class="input-url" type="text"
                    id="url"
                    formControlName="fullUrl">
             <button class="button-generate" (click)="generateUrl()">Generate</button> <br>
-            {{shortenUrl}}
+
+            <div class="div-status" [ngClass]="status == 'Success' ? 'status-success' : 'status-error'">{{status}}</div>
+            <div>{{shortenUrl}}</div>
             <br>
         </form>
     </div>

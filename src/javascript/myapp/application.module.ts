@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {ApplicationComponent} from "./application.component";
 
 import {ShortenUrlService} from "./services/shorten-url.service";
+import {UserService} from "./services/user.service";
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import {ShortenUrlService} from "./services/shorten-url.service";
         ReactiveFormsModule
     ],
     providers: [
-        ShortenUrlService
+        ShortenUrlService,
+        UserService
     ],
     bootstrap: [ApplicationComponent]
 })
