@@ -20,14 +20,17 @@ class ShortenUrlController {
         render jsonMap as JSON
     }
 
-    def list() {
+    def retrieve() {
         log.trace "list(), params: $params"
-        def res = shortenUrlService.list()
+        def res = shortenUrlService.retrieve(params)
+
+        if (!res) {
+            render(status: 404, message: 'Invalid Url!')
+            return
+        }
         HashMap jsonMap = new HashMap()
 
-        jsonMap.results = res.collect { r ->
-            [fullUrl: r.fullUrl, shortUrl: r.shortUrl]
-        }
+        jsonMap.results = [fullUrl: res.fullUrl, shortUrl: res.shortUrl, expiration: res.expiration]
 
         render jsonMap as JSON
     }

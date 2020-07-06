@@ -12,9 +12,13 @@ import {UserService} from "./services/user.service";
 export class ApplicationComponent implements OnInit {
 
     status: string = '';
+    navigateStatus: string = '';
     shortenUrl: string = '';
+    fullUrl: string = '';
+    request: any;
     formGroup: FormGroup;
     currentUser: string;
+    errorMsg: string = '';
 
     constructor(private formBuilder: FormBuilder,
                 private shortenUrlService: ShortenUrlService,
@@ -30,6 +34,7 @@ export class ApplicationComponent implements OnInit {
 
         model['fullUrl'] = ['', [Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'), Validators.required]];
         model['user'] = ['', Validators.required];
+        model['shortUrl'] = ['', Validators.required];
 
         this.formGroup = this.formBuilder.group(model);
     }
@@ -55,6 +60,7 @@ export class ApplicationComponent implements OnInit {
                 console.log('error');
                 this.updateStatus('Error');
                 this.shortenUrl = '';
+                this.errorMsg = error.message;
             });
     }
 
@@ -74,6 +80,34 @@ export class ApplicationComponent implements OnInit {
                 this.currentUser = res.results.username;
             }, error => {
 
+            });
+    }
+
+    private navigate() {
+        console.log('Navigate!');
+
+        if (!this.isFieldValid('shortUrl')) {
+            alert('Url Required!');
+            return;
+        }
+
+        if (!this.currentUser) {
+            alert('Please first login or register user!');
+            return;
+        }
+        this.shortenUrlService.navigate({shortUrl: this.getFieldValue('shortUrl'), username: this.currentUser})
+            .subscribe((res: any) => {
+                console.log('Success');
+                this.navigateStatus = 'Success';
+                this.fullUrl = res.results.fullUrl
+                this.request = res.results.expiration;
+                this.errorMsg = '';
+            }, (error: any) => {
+                console.log('Error');
+                this.navigateStatus = 'Failure';
+                this.errorMsg = error.error.message;
+                this.fullUrl = '';
+                this.request = '';
             });
     }
 

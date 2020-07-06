@@ -11,11 +11,11 @@ class UrlMappings {
 
         "/api/v1/urls" {
             controller = 'shortenUrl'
-            action = [POST: 'post', GET: 'list']
+            action = [POST: 'post', GET: 'retrieve']
         }
 
         "/"(view:"/myapp")
         "500"(view:'/error')
-        "404"(view:'/notFound')
+
     }
 }

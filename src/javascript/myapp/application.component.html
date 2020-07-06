@@ -2,21 +2,33 @@
     <div class="app-container">
         <h1>Welcome to my Angular Application</h1>
         <form [formGroup]="formGroup">
-            <label class="label-url" for="user">User</label>
+            <!-- User Field  -->
+<!--            <label class="label-url" for="user">User</label>-->
             <input class="input-url" type="text"
                    id="user"
                    formControlName="user">
-            <button class="button-generate" (click)="registerUser()">Login/Register</button> <br> <br>
+            <button class="button-generate" (click)="registerUser()">Login/Register</button> <br>
+            <div *ngIf="currentUser">
+                Current User: {{currentUser}}
+            </div> <br>
 
-            <label class="label-url" for="url">Url</label>
+            <!-- Full Url Field  -->
+<!--            <label class="label-url" for="url">Url</label>-->
             <input class="input-url" type="text"
                    id="url"
                    formControlName="fullUrl">
-            <button class="button-generate" (click)="generateUrl()">Generate</button> <br>
-
+            <button class="button-generate" (click)="generateUrl()">Generate Url</button>
             <div class="div-status" [ngClass]="status == 'Success' ? 'status-success' : 'status-error'">{{status}}</div>
             <div>{{shortenUrl}}</div>
             <br>
+
+            <!-- Short Url Field  -->
+            <input class="input-url" type="text"
+                   id="short_url"
+                   formControlName="shortUrl">
+            <button class="button-generate" (click)="navigate()">Go!</button>
+            <div class="div-status" [ngClass]="navigateStatus == 'Success' ? 'status-success' : 'status-error'">{{navigateStatus}}</div> {{this.errorMsg}}
+            <div>{{fullUrl}} ({{this.request}})</div>
         </form>
     </div>
 </div>

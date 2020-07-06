@@ -11,4 +11,8 @@ export class ShortenUrlService {
 
         return this.http.post('api/v1/urls', body);
     }
+
+    navigate(body: any) {
+        return this.http.get('api/v1/urls', {params: body});
+    }
 }
