@@ -2,7 +2,7 @@ package myapp
 
 class ShortenUrl {
 
-    User user
+    String application = 'myapp'
 
     String fullUrl
 
@@ -11,7 +11,7 @@ class ShortenUrl {
     int expiration
 
     static constraints = {
-        fullUrl maxSize: 4000, unique: 'user'
-        shortUrl maxSize: 255
+        fullUrl maxSize: 4000, unique: 'application'
+        shortUrl maxSize: 255, nullable: true
     }
 }

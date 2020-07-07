@@ -6,7 +6,13 @@
     "noEmit": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "target": "es5"
+    "target": "es5",
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.collection"
+    ]
   },
   "exclude": [
     "node_modules",

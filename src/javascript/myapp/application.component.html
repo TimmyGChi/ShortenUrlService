@@ -4,13 +4,13 @@
         <form [formGroup]="formGroup">
             <!-- User Field  -->
 <!--            <label class="label-url" for="user">User</label>-->
-            <input class="input-url" type="text"
-                   id="user"
-                   formControlName="user">
-            <button class="button-generate" (click)="registerUser()">Login/Register</button> <br>
-            <div *ngIf="currentUser">
-                Current User: {{currentUser}}
-            </div> <br>
+<!--            <input class="input-url" type="text"-->
+<!--                   id="user"-->
+<!--                   formControlName="user">-->
+<!--            <button class="button-generate" (click)="registerUser()">Login/Register</button> <br>-->
+<!--            <div *ngIf="currentUser">-->
+<!--                Current User: {{currentUser}}-->
+<!--            </div> <br>-->
 
             <!-- Full Url Field  -->
 <!--            <label class="label-url" for="url">Url</label>-->
@@ -18,7 +18,7 @@
                    id="url"
                    formControlName="fullUrl">
             <button class="button-generate" (click)="generateUrl()">Generate Url</button>
-            <div class="div-status" [ngClass]="status == 'Success' ? 'status-success' : 'status-error'">{{status}}</div>
+            <div class="div-status" [ngClass]="status == 'Success' ? 'status-success' : 'status-error'">{{status}}</div> {{this.genErrMsg}}
             <div>{{shortenUrl}}</div>
             <br>
 
@@ -27,8 +27,12 @@
                    id="short_url"
                    formControlName="shortUrl">
             <button class="button-generate" (click)="navigate()">Go!</button>
-            <div class="div-status" [ngClass]="navigateStatus == 'Success' ? 'status-success' : 'status-error'">{{navigateStatus}}</div> {{this.errorMsg}}
+            <div class="div-status" [ngClass]="navigateStatus == 'Success' ? 'status-success' : 'status-error'">{{navigateStatus}}</div> {{this.navErrMsg}}
             <div>{{fullUrl}} ({{this.request}})</div>
         </form>
+
+        <div *ngFor="let url of urls | keyvalue">
+            {{url.key}} => {{url.value}}
+        </div>
     </div>
 </div>

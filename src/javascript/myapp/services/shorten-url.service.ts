@@ -9,7 +9,7 @@ export class ShortenUrlService {
 
     generate(body: any) {
 
-        return this.http.post('api/v1/urls', body);
+        return this.http.post('/api/v1/urls', body);
     }
 
     navigate(body: any) {

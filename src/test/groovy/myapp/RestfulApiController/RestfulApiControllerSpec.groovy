@@ -1,7 +1,7 @@
 package myapp.RestfulApiController
 
 import grails.testing.web.controllers.ControllerUnitTest
-import myapp.UserController
+
 import spock.lang.Specification
 
 class RestfulApiControllerSpec extends Specification implements ControllerUnitTest<UserController> {

@@ -18,11 +18,20 @@ export class ApplicationComponent implements OnInit {
     request: any;
     formGroup: FormGroup;
     currentUser: string;
-    errorMsg: string = '';
+    navErrMsg: string = '';
+    genErrMsg: string = '';
+    urls: any = new Map();
 
     constructor(private formBuilder: FormBuilder,
-                private shortenUrlService: ShortenUrlService,
-                private userService: UserService) {
+                private shortenUrlService: ShortenUrlService) {
+        this.shortenUrlService.navigate(null)
+            .subscribe((success: any) => {
+                for (let res of success.results) {
+                    this.urls.set(res.fullUrl, res.shortUrl);
+                }
+            }, err => {
+                console.log('list() error');
+            });
     }
 
     ngOnInit() {
@@ -46,41 +55,23 @@ export class ApplicationComponent implements OnInit {
             return;
         }
 
-        if (!this.currentUser) {
-            alert('Please first login or register user!');
-            return;
-        }
-
         this.shortenUrlService.generate({fullUrl: this.getFieldValue('fullUrl'), username: this.currentUser})
             .subscribe((res: any) => {
                 console.log('success');
                 this.updateStatus('Success')
                 this.shortenUrl = res.results.shortUrl;
+                this.urls.set(res.results.fullUrl, this.shortenUrl);
+                this.genErrMsg = '';
             }, error => {
                 console.log('error');
                 this.updateStatus('Error');
                 this.shortenUrl = '';
-                this.errorMsg = error.message;
+                this.genErrMsg = error.error.message;
             });
     }
 
     private updateStatus(status: string) {
         this.status = status;
-    }
-
-    private registerUser() {
-        console.log('Login/Register User');
-
-        if (!this.isFieldValid('user')) {
-            alert('User is required!');
-            return;
-        }
-        this.userService.register({username: this.getFieldValue('user')})
-            .subscribe((res: any) => {
-                this.currentUser = res.results.username;
-            }, error => {
-
-            });
     }
 
     private navigate() {
@@ -91,21 +82,18 @@ export class ApplicationComponent implements OnInit {
             return;
         }
 
-        if (!this.currentUser) {
-            alert('Please first login or register user!');
-            return;
-        }
         this.shortenUrlService.navigate({shortUrl: this.getFieldValue('shortUrl'), username: this.currentUser})
             .subscribe((res: any) => {
                 console.log('Success');
                 this.navigateStatus = 'Success';
                 this.fullUrl = res.results.fullUrl
                 this.request = res.results.expiration;
-                this.errorMsg = '';
+                this.navErrMsg = '';
             }, (error: any) => {
                 console.log('Error');
                 this.navigateStatus = 'Failure';
-                this.errorMsg = error.error.message;
+                this.navErrMsg = error.error.message;
+                this.urls.delete(this.fullUrl);
                 this.fullUrl = '';
                 this.request = '';
             });
@@ -117,5 +105,9 @@ export class ApplicationComponent implements OnInit {
 
     private getFieldValue(field: string) {
         return this.formGroup.controls[field].value;
+    }
+
+    localStorage() {
+        return localStorage;
     }
 }

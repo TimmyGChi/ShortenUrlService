@@ -2,36 +2,40 @@ package myapp
 
 import grails.gorm.transactions.Transactional
 
-import java.security.MessageDigest
-
 @Transactional
 class ShortenUrlService {
 
-    static int RADIX = 16
+    static final char[] charMap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
     static int HASH_LENGTH = 7
     static String MD_ALGORITHM = 'MD5'
-    static String PREFIX_URL = "https://bit.ly/"
+    static String PREFIX_URL = "https://short.en/"
     static int EXPIRED = 10
+    static int RADIX = 62
 
     def post(content, params) {
         log.trace("post(): $params")
 
-        User user = User.findByUsername(content['username'])
-        def instance = ShortenUrl.findByUserAndFullUrl(user, content['fullUrl'])
-        if (!instance) {
-            String shortUrl = generateShortUrl(content['fullUrl'])
-
-            instance = new ShortenUrl(user: user, fullUrl: content['fullUrl'], shortUrl: shortUrl).save(flush: true)
+        def instance = ShortenUrl.findByFullUrl(content['fullUrl'])
+        if (instance) {
+            // Unique Constraint
+            return null
         }
+        instance = new ShortenUrl(fullUrl: content['fullUrl']).save(flush: true)
+        String suffix = getBase62From10(instance.id)
+
+        instance.shortUrl = "$PREFIX_URL$suffix"
         instance
+    }
+
+    def list() {
+        ShortenUrl.list()
     }
 
     def retrieve(params) {
         log.trace("retrieve(): $params")
         String url = params['shortUrl']
-        User user = User.findByUsername(params['username'] as String)
 
-        def instance = ShortenUrl.findByUserAndShortUrl(user, url)
+        def instance = ShortenUrl.findByShortUrl(url)
 
         if (!instance) {
             return null
@@ -44,11 +48,26 @@ class ShortenUrlService {
         instance
     }
 
-    String generateShortUrl(String url) {
-        MessageDigest md = MessageDigest.getInstance(MD_ALGORITHM)
-        byte[] md5Hash = md.digest(url.bytes)
+    String getBase62From10(long uniqueId) {
+        String number = String.valueOf(uniqueId)
+        BigInteger bigInteger = new BigInteger(number)
+        BigInteger base62 = BigInteger.valueOf(RADIX)
+        char[] arr = new char[number.length()]
+        int position = number.length() - 1
 
-        "$PREFIX_URL${new BigInteger(1, md5Hash).toString(RADIX).substring(0, HASH_LENGTH)}"
+        while (bigInteger.compareTo(base62) >= 0) {
+            int mod = bigInteger.mod(base62).intValue()
+
+            arr[position--] = charMap[mod]
+            bigInteger = bigInteger.divide(base62)
+        }
+        arr[position] = charMap[bigInteger.intValue()]
+
+        new String(arr, position, (number.length() - position))
+    }
+
+    String getBase10From62(long url) {
+
     }
 
     boolean isUrlInvalid(instance) {
