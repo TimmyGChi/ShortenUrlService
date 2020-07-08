@@ -5,9 +5,7 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class ShortenUrlService {
 
-    static final char[] charMap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
-    static int HASH_LENGTH = 7
-    static String MD_ALGORITHM = 'MD5'
+    static final char[] converter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
     static String PREFIX_URL = "https://short.en/"
     static int EXPIRED = 10
     static int RADIX = 62
@@ -58,16 +56,12 @@ class ShortenUrlService {
         while (bigInteger.compareTo(base62) >= 0) {
             int mod = bigInteger.mod(base62).intValue()
 
-            arr[position--] = charMap[mod]
+            arr[position--] = converter[mod]
             bigInteger = bigInteger.divide(base62)
         }
-        arr[position] = charMap[bigInteger.intValue()]
+        arr[position] = converter[bigInteger.intValue()]
 
         new String(arr, position, (number.length() - position))
-    }
-
-    String getBase10From62(long url) {
-
     }
 
     boolean isUrlInvalid(instance) {

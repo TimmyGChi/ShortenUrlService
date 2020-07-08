@@ -58,6 +58,7 @@ export class ApplicationComponent implements OnInit {
                 this.updateStatus('Success')
                 this.shortenUrl = res.results.shortUrl;
                 this.urls.set(res.results.fullUrl, this.shortenUrl);
+                this.setFieldValue('shortUrl', this.shortenUrl);
                 this.genErrMsg = '';
             }, error => {
                 console.log('error');
@@ -102,5 +103,9 @@ export class ApplicationComponent implements OnInit {
 
     private getFieldValue(field: string) {
         return this.formGroup.controls[field].value;
+    }
+
+    private setFieldValue(field: string, value: any) {
+        this.formGroup.controls[field].setValue(value);
     }
 }
