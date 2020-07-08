@@ -2,7 +2,6 @@ import {Component, OnInit} from "@angular/core";
 
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ShortenUrlService} from "./services/shorten-url.service";
-import {UserService} from "./services/user.service";
 
 @Component({
     selector: "application-component",
@@ -17,7 +16,6 @@ export class ApplicationComponent implements OnInit {
     fullUrl: string = '';
     request: any;
     formGroup: FormGroup;
-    currentUser: string;
     navErrMsg: string = '';
     genErrMsg: string = '';
     urls: any = new Map();
@@ -42,7 +40,6 @@ export class ApplicationComponent implements OnInit {
         let model = {};
 
         model['fullUrl'] = ['', [Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?'), Validators.required]];
-        model['user'] = ['', Validators.required];
         model['shortUrl'] = ['', Validators.required];
 
         this.formGroup = this.formBuilder.group(model);
@@ -55,7 +52,7 @@ export class ApplicationComponent implements OnInit {
             return;
         }
 
-        this.shortenUrlService.generate({fullUrl: this.getFieldValue('fullUrl'), username: this.currentUser})
+        this.shortenUrlService.generate({fullUrl: this.getFieldValue('fullUrl')})
             .subscribe((res: any) => {
                 console.log('success');
                 this.updateStatus('Success')
@@ -82,7 +79,7 @@ export class ApplicationComponent implements OnInit {
             return;
         }
 
-        this.shortenUrlService.navigate({shortUrl: this.getFieldValue('shortUrl'), username: this.currentUser})
+        this.shortenUrlService.navigate({shortUrl: this.getFieldValue('shortUrl')})
             .subscribe((res: any) => {
                 console.log('Success');
                 this.navigateStatus = 'Success';
@@ -105,9 +102,5 @@ export class ApplicationComponent implements OnInit {
 
     private getFieldValue(field: string) {
         return this.formGroup.controls[field].value;
-    }
-
-    localStorage() {
-        return localStorage;
     }
 }

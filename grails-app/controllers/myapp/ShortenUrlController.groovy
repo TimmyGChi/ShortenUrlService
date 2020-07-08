@@ -22,29 +22,26 @@ class ShortenUrlController {
     }
 
     def retrieve() {
-        log.trace "list(), params: $params"
+        HashMap jsonMap = new HashMap()
+
         if (params.containsKey('shortUrl')) {
+            log.trace "retrieve(), params: $params"
             def res = shortenUrlService.retrieve(params)
 
             if (!res) {
                 render(status: 404, message: 'Invalid Url!')
                 return
             }
-            HashMap jsonMap = new HashMap()
 
-            jsonMap.results = [fullUrl: res.fullUrl, shortUrl: res.shortUrl, expiration: res.expiration]
-
-            render jsonMap as JSON
+            jsonMap.results = [id: res.id, fullUrl: res.fullUrl, shortUrl: res.shortUrl, expiration: res.expiration]
         } else {
+            log.trace "list(), params: $params"
             def res = shortenUrlService.list()
-            HashMap jsonMap = new HashMap()
 
             jsonMap.results = res.collect { it ->
-                [fullUrl: it.fullUrl, shortUrl: it.shortUrl]
+                [id: it.id, fullUrl: it.fullUrl, shortUrl: it.shortUrl, expiration: it.expiration]
             }
-
-            render jsonMap as JSON
         }
-
+        render jsonMap as JSON
     }
 }
