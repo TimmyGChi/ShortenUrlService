@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  AppUser: TCI2
-  Date: 6/30/2020
-  Time: 9:35 PM
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
