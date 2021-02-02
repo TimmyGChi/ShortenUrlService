@@ -46,7 +46,7 @@
             <asset:image src="documentation.svg" alt="Grails Documentation" class="float-left"/>
         </a>
         <strong class="centered"><a href="http://docs.grails.org" target="_blank">Documentation</a></strong>
-        <p>Ready to dig in? You can find in-depth documentation for all the features of Grails in the <a href="http://docs.grails.org" target="_blank">AppUser Guide</a>.</p>
+        <p>Ready to dig in? You can find in-depth documentation for all the features of Grails in the <a href="http://docs.grails.org" target="_blank">User Guide</a>.</p>
 
     </div>
 
